@@ -6,10 +6,11 @@ import warnings
 import calendar
 import random
 import wikipedia
+import pyaudio
 import wave
 import sys
 import webbrowser
-import cv2,time
+import time
 import tkinter as Tkinter  
 
 name='Nikhil Rawal'
@@ -28,7 +29,7 @@ def age():
 def recordAudio():
     r=sr.Recognizer()#created a object
     with sr.Microphone() as source:#os take audio input
-        print('Hey I am elsa how can i help you master!')
+        print('Hey I am riya how can i help you master!')
         audio=r.listen(source)
     data=''
     try:
@@ -69,7 +70,7 @@ def getDate():
 
 def greeting(text):
     GREETING_INPUTS=['hi','hey','hola','greetings','wassup','hello']
-    GREETING_OUTPUT=['welcome sir i am arificial intelligence created by nikhil rawal','hello sir i am elsa how can i help you','hey there sir i am Artificial intelligence created by Nikhil Rawal']
+    GREETING_OUTPUT=['welcome sir i am arificial intelligence created by nikhil rawal','hello sir i am riya how can i help you','hey there sir i am Artificial intelligence created by Nikhil Rawal']
     for word in text.split():
         if word in GREETING_INPUTS:
             return random.choice(GREETING_OUTPUT)+'. '
@@ -92,8 +93,8 @@ def contain(otext,text):
 def google(text):
     webbrowser.open('https://google.com/?#q='+text)
 
-def youtube():
-    webbrowser.open('https://www.youtube.com/')
+def youtube(text):
+    webbrowser.open("https://www.youtube.com/results?search_query="+text)
 
 def goodmorning():
     morno=['good morning sir','good morning and have a nice day','good morning sir i am elsa an artificial intelligence']
@@ -111,31 +112,7 @@ def goodnight():
     morno=['good night sir take a good sleep']
     return random.choice(morno)
 
-def cam():
-    video=cv2.VideoCapture(0)
-    a=0
-    while True:
-        a=a+1
-        check,frame=video.read()
-        cv2.imshow("Capturing",frame)
-        key=cv2.waitKey(1)
-        if key == ord('q'):
-            break
-    video.release()
 
-def detect():
-    cap=cv2.VideoCapture(0)
-    face_cascade=cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    while True:
-        _,img = cap.read()
-        gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-        faces=face_cascade.detectMultiScale(gray,1.1,4)
-        for(x, y, w, h) in faces:
-            cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-        cv2.imshow('img',img)
-        key=cv2.waitKey(1)
-        if key == ord('q'):
-            break
 
     
 while True:
@@ -154,16 +131,17 @@ while True:
         asr(getDate())
     elif(contain(text,'who')):
         print('working')
-        person=getPerson(text)
+        person=text[6:]
         wiki=wikipedia.summary(person,sentences=1)
         asr(wiki)
+    elif(contain(text,'youtube')):
+        text=text[15:]
+        youtube(text)
     elif(contain(text,'search')):
         text=text[13:]
         google(text)
-    elif(contain(text,'youtube')):
-        youtube()
     elif(contain(text,'features')):
-        print("My features are as following:\n0. random geetings just say hello riya\n1. basic info about you master(riya,nisha,phone no. ex:tell me about riya, what is my phone number)\n2. tell me date\n3. google search what_you_want_to_search\n4. open youtube\n5.who is person_name and person_surname i will do wikipidia search\n6. what is my age\n7. feel boring\n8. good morning, good afternoon,good night,good evening\n9. open camera\n10. detect faces incomplete")
+        print("My features are as following:\n0. random geetings just say hello riya\n1. basic info about you master(riya,nisha,phone no. ex:tell me about riya, what is my phone number)\n2. tell me date\n3. google search what_you_want_to_search\n4. open youtube\n5.who is person_name and person_surname i will do wikipidia search\n6. what is my age\n7. feel boring\n8. good morning, good afternoon,good night,good evening\n")
     elif(contain(text,'age')):
         Age=age()
         Agestr=str(Age)
@@ -182,10 +160,5 @@ while True:
     elif(contain(text,'afternoon') or contain(text,'goodafternoon')):
         a=goodafternoon()
         asr(a)
-    elif(contain(text,'camera')):
-        asr('i am opening the camera sir')
-        cam();
-    elif(contain(text,'detect')):
-        asr('i am opening the camera sir')
-        detect()
-        
+
+
